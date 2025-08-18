@@ -7,7 +7,7 @@ const studentsData = [
   {
     id: 1,
     name: "Aarav Reddy",
-    img: "https://randomuser.me/api/portraits/men/32.jpg",
+    img: "https://documents.iplt20.com/ipl/IPLHeadshot2025/2.png",
     college: "IIT Hyderabad",
     branch: "CSE",
     program: "Google Summer of Code Internship",
@@ -17,9 +17,9 @@ const studentsData = [
   {
     id: 2,
     name: "Megha Sharma",
-    img: "https://randomuser.me/api/portraits/women/44.jpg",
-    college: "NIT Warangal",
-    branch: "ECE",
+    img: "https://upload.wikimedia.org/wikipedia/commons/1/1e/Prime_Minister_Of_Bharat_Shri_Narendra_Damodardas_Modi_with_Shri_Rohit_Gurunath_Sharma_%28Cropped%29.jpg",
+    college: "VNR VJIET",
+    branch: "CSD",
     program: "DAAD Research Scholarship",
     type: "Scholarship",
     year: "2nd Year"
@@ -27,7 +27,7 @@ const studentsData = [
   {
     id: 3,
     name: "Rahul Verma",
-    img: "https://randomuser.me/api/portraits/men/67.jpg",
+    img: "https://documents.iplt20.com/ipl/IPLHeadshot2025/15.png",
     college: "JNTU Hyderabad",
     branch: "Mechanical Engineering",
     program: "ISRO Internship Program",
@@ -37,8 +37,8 @@ const studentsData = [
   {
     id: 4,
     name: "Priya Nair",
-    img: "https://randomuser.me/api/portraits/women/21.jpg",
-    college: "Osmania University",
+    img: "https://upload.wikimedia.org/wikipedia/commons/d/da/Prime_Minister_Of_Bharat_Shri_Narendra_Damodardas_Modi_with_Mohammad_Siraj_%28cropped%29.jpg",
+    college: "MALLA REDDY ENGINEERING COLLEGE",
     branch: "Biotechnology",
     program: "Inspire Scholarship by DST",
     type: "Scholarship",
@@ -47,7 +47,7 @@ const studentsData = [
   {
     id: 5,
     name: "Karan Patel",
-    img: "https://randomuser.me/api/portraits/men/12.jpg",
+    img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSLiWCEBmcc1zWwqZyf1oahMZzDyWtl1oF84Q&s",
     college: "CBIT Hyderabad",
     branch: "IT",
     program: "Microsoft Engage Internship",
@@ -57,8 +57,8 @@ const studentsData = [
   {
     id: 6,
     name: "Sneha Kulkarni",
-    img: "https://randomuser.me/api/portraits/women/65.jpg",
-    college: "BITS Pilani",
+    img: "https://images.mykhel.com//webp/images/cricket/players/2/4552.jpg?v=5",
+    college: "CVR Hyderabad",
     branch: "Chemical Engineering",
     program: "Reliance Research Fellowship",
     type: "Scholarship",
@@ -67,8 +67,8 @@ const studentsData = [
   {
     id: 7,
     name: "Vikram Singh",
-    img: "https://randomuser.me/api/portraits/men/82.jpg",
-    college: "VIT Vellore",
+    img: "https://d1k8sn41pix00a.cloudfront.net/media/players/photos/kane-williamson-new-hd-wallpapers-high-definition-images-1080p-xuq.png",
+    college: "Vasavi Engineering College",
     branch: "AI & ML",
     program: "Amazon Machine Learning Internship",
     type: "Internship",
@@ -77,7 +77,7 @@ const studentsData = [
   {
     id: 8,
     name: "Ananya Gupta",
-    img: "https://randomuser.me/api/portraits/women/56.jpg",
+    img: "https://documents.bcci.tv/resizedimageskirti/2740_compress.png",
     college: "IIIT Delhi",
     branch: "Electronics and Communication",
     program: "IEEE Women in Tech Scholarship",
@@ -101,7 +101,7 @@ function Internships() {
           borderRadius: "0 0 20px 20px",
           textAlign: "center",
           color: "#222",
-          boxShadow: "0 4px 15px rgba(0,0,0,0.5)"
+          boxShadow: "0 4px 15px rgba(0,0,0,0.7)"
         }}
       >
         <h2 style={{ fontWeight: "bold", fontSize: "2rem" }}>✨ Internship and Scholarship Opportunities secured at Top Engineering Colleges in Telangana 🎓</h2>
@@ -115,13 +115,13 @@ function Internships() {
             <div key={student.id} className="col-md-3 mb-4">
               <div
                 className="card h-100 shadow-lg rounded-4"
-                style={{ border: "none", background: "#f9f9f9" }}
+                style={{ border: "none", background: "whitesmoke" }}
               >
                 <img
                   src={student.img}
-                  className="card-img-top rounded-top-4"
+                  className="card-img-top rounded-top-4 "
                   alt={student.name}
-                  style={{ height: "220px", objectFit: "cover" }}
+                  style={{ height: "220px", objectFit: "contain",}}               
                 />
                 <div className="card-body text-center">
                   <h5 className="fw-bold">{student.name}</h5>
