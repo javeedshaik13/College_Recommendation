@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Select from "react-select";
-import Navbar from "../components/Navbar.jsx";
-import Footer from "../components/Footer.jsx";
+import Navbar from "./Navbar.jsx";
+import Footer from "./Footer.jsx";
 
 const branchList = [
   { code: "CSE", name: "Computer Science and Engineering" },

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Papa from "papaparse";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
+
 import {
   Chart as ChartJS,
   CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend,
@@ -35,12 +36,12 @@ export default function CollegeStats() {
 
   useEffect(() => {
     const files = [
-      "/data/new-DS/file1.csv",
-      "/data/new-DS/file2.csv",
-      "/data/new-DS/file3.csv",
-      "/data/new-DS/file4.csv",
-      "/data/new-DS/file5.csv",
-      "/data/new-DS/file6.csv",
+      "../../Datasets/Cleaned-DS/df1_cleaned.csv",
+      "College_Recommendation/Datasets/Cleaned-DS/df2_cleaned.csv",
+      "College_Recommendation/Datasets/Cleaned-DS/df3_cleaned.csv",
+      "College_Recommendation/Datasets/Cleaned-DS/df4_cleaned.csv",
+      "College_Recommendation/Datasets/Cleaned-DS/df5_cleaned.csv",
+      "College_Recommendation/Datasets/Cleaned-DS/df6_cleaned.csv",
     ];
 
     Promise.all(
@@ -50,10 +51,15 @@ export default function CollegeStats() {
             if (!res.ok) throw new Error(`Failed to load ${file}`);
             return res.text();
           })
-          .then(csvText => Papa.parse(csvText, { header: true, skipEmptyLines: true }).data)
+          .then(csvText => {
+            const parsed = Papa.parse(csvText, { header: true, skipEmptyLines: true }).data;
+            console.log(`Loaded data from ${file}:`, parsed.slice(0, 3)); // show first 3 rows as sample
+            return parsed;
+          })
       )
     ).then(allData => {
       const merged = allData.flat().filter(row => Object.values(row).some(v => v !== ""));
+      console.log("Merged data sample:", merged.slice(0, 5));
       setData(merged);
     }).catch(err => console.error("Error loading CSV files:", err));
   }, []);
@@ -68,8 +74,13 @@ export default function CollegeStats() {
     (selectedLocation === "All" || item["PLACE"] === selectedLocation)
   );
 
+  console.log("Filtered data sample:", filteredData.slice(0, 5));
+
   const chartLabels = filteredData.map(item => item["BRANCH NAME"]);
-  const chartValues = filteredData.map(item => parseFloat(item[selectedCategory]) || 0);
+  const chartValues = filteredData.map(item => {
+    const val = parseFloat(item[selectedCategory]);
+    return isNaN(val) ? 0 : val;
+  });
 
   const chartData = {
     labels: chartLabels,
@@ -110,33 +121,33 @@ export default function CollegeStats() {
       <div className="container">
         <h2>📊 College Statistics Dashboard</h2>
 
-      <div style={{ display: "flex", gap: "10px", flexWrap: "wrap", marginBottom: "20px",marginTop: "100px" }}>
-        <select value={selectedCollege} onChange={e => setSelectedCollege(e.target.value)}>
-          {colleges.map(c => <option key={c}>{c}</option>)}
-        </select>
+        <div style={{ display: "flex", gap: "10px", flexWrap: "wrap", marginBottom: "20px", marginTop: "100px" }}>
+          <select value={selectedCollege} onChange={e => setSelectedCollege(e.target.value)}>
+            {colleges.map(c => <option key={c}>{c}</option>)}
+          </select>
 
-        <select value={selectedBranch} onChange={e => setSelectedBranch(e.target.value)}>
-          {branches.map(b => <option key={b}>{b}</option>)}
-        </select>
+          <select value={selectedBranch} onChange={e => setSelectedBranch(e.target.value)}>
+            {branches.map(b => <option key={b}>{b}</option>)}
+          </select>
 
-        <select value={selectedLocation} onChange={e => setSelectedLocation(e.target.value)}>
-          {locations.map(l => <option key={l}>{l}</option>)}
-        </select>
+          <select value={selectedLocation} onChange={e => setSelectedLocation(e.target.value)}>
+            {locations.map(l => <option key={l}>{l}</option>)}
+          </select>
 
-        <select value={selectedCategory} onChange={e => setSelectedCategory(e.target.value)}>
-          {categories.map(cat => <option key={cat}>{cat}</option>)}
-        </select>
+          <select value={selectedCategory} onChange={e => setSelectedCategory(e.target.value)}>
+            {categories.map(cat => <option key={cat}>{cat}</option>)}
+          </select>
 
-        <select value={chartType} onChange={e => setChartType(e.target.value)}>
-          {chartTypes.map(type => <option key={type}>{type}</option>)}
-        </select>
+          <select value={chartType} onChange={e => setChartType(e.target.value)}>
+            {chartTypes.map(type => <option key={type}>{type}</option>)}
+          </select>
+        </div>
+
+        <div style={{ maxWidth: "100%", overflowX: "auto" }}>
+          {renderChart()}
+        </div>
       </div>
-
-      <div style={{ maxWidth: "100%", overflowX: "auto" }}>
-        {renderChart()}
-      </div>
-    </div>
-    <Footer />
-  </>
+      <Footer />
+    </>
   );
 }

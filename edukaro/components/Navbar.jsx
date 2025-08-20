@@ -107,7 +107,7 @@ function Navbar() {
           </button>
           <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton">
             <li><Link className="dropdown-item" to="/college-info"><i className="bi bi-trophy-fill"></i> Top Colleges List</Link></li>
-            <li><Link className="dropdown-item" to="/college-rankings"><i className="bi bi-mortarboard-fill"></i> College Rankings</Link></li>
+            <li><Link className="dropdown-item" to="/rankings"><i className="bi bi-mortarboard-fill"></i> College Rankings</Link></li>
             <li><Link className="dropdown-item" to="/reservation-policy"><i className="bi bi-info-circle-fill"></i> Reservation Policy</Link></li>
           </ul>
         </div>
