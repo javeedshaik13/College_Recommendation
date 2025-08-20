@@ -36,14 +36,13 @@ export default function CollegeStats() {
 
   useEffect(() => {
     const files = [
-      "/Cleaned-DS/df1_cleaned.csv",
-      "/Cleaned-DS/df2_cleaned.csv",
-      "/Cleaned-DS/df3_cleaned.csv",
-      "/Cleaned-DS/df4_cleaned.csv",
-      "/Cleaned-DS/df5_cleaned.csv",
-      "/Cleaned-DS/df6_cleaned.csv",
+      "../../Datasets/Cleaned-DS/df1_cleaned.csv",
+      "College_Recommendation/Datasets/Cleaned-DS/df2_cleaned.csv",
+      "College_Recommendation/Datasets/Cleaned-DS/df3_cleaned.csv",
+      "College_Recommendation/Datasets/Cleaned-DS/df4_cleaned.csv",
+      "College_Recommendation/Datasets/Cleaned-DS/df5_cleaned.csv",
+      "College_Recommendation/Datasets/Cleaned-DS/df6_cleaned.csv",
     ];
-
 
     Promise.all(
       files.map(file =>
@@ -75,7 +74,7 @@ export default function CollegeStats() {
     (selectedLocation === "All" || item["PLACE"] === selectedLocation)
   );
 
-  // console.log("Filtered data sample:", filteredData.slice(0, 5));
+  console.log("Filtered data sample:", filteredData.slice(0, 5));
 
   const chartLabels = filteredData.map(item => item["BRANCH NAME"]);
   const chartValues = filteredData.map(item => {
