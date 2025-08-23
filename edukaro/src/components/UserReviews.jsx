@@ -64,10 +64,8 @@ const reviewsData = [
 function UserReviews() {
   return (
     <div>
-      <Navbar />
       <div
         style={{
-          marginTop: "100px",
           padding: "100px",
           background: "linear-gradient(90deg, #54c36eff, #9b55b7ff, #c2e7fbff, #eba1fdff, #41c080ff)",
           backgroundSize: "300% 300%",
@@ -105,7 +103,6 @@ function UserReviews() {
           ))}
         </div>
       </div>
-      <Footer />
     </div>
   )
 }

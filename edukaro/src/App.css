@@ -11,5 +11,5 @@ html, body {
 }
 
 main {
-  flex: 1;
+  padding-top: 76px; /* height of navbar */
 }

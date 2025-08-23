@@ -1,7 +1,4 @@
 import React, { useState } from "react";
-import Navbar from "./Navbar";
-import Footer from "./Footer";
-import { Link } from "react-router-dom";
 
 const commonDetails = [
   { icon: "bi-briefcase-fill", title: "Placements" },
@@ -18,7 +15,7 @@ const extraDetails = [
   { icon: "bi-building", title: "Affiliated To", key: "affiliation" },
   { icon: "bi-bank", title: "Type of College", key: "type" },
   { icon: "bi-people-fill", title: "Co-education", key: "coeducation" },
-  { icon:"bi-rank-fill", title: "Ranking", key: "rank"}
+  { icon: "bi-trophy-fill", title: "Ranking", key: "rank"}
 ];
 
 const colleges = [
@@ -95,7 +92,6 @@ const colleges = [
       "Top 4 in the state.",
       "4.0 / 5 by students.",
       "A",
-      
     ],
     website: "https://vnrvjiet.ac.in",
     affiliation: "JNTUH",
@@ -150,11 +146,9 @@ function CollegeCard() {
 
   return (
     <>
-      <Navbar />
+      {/* Header Section */}
       <div
         style={{
-          marginTop:"100px",
-          padding: "100px",
           background: "linear-gradient(90deg, #ff9a9e, #c4fac5ff, #fbc2eb, #a1c4fd, #c2e9fb)",
           backgroundSize: "300% 300%",
           animation: "gradientBG 8s ease infinite",
@@ -165,66 +159,126 @@ function CollegeCard() {
           boxShadow: "0 4px 15px rgba(0,0,0,0.5)"
         }}
       >
-        <h2 style={{ fontWeight: "bold", fontSize: "2rem" }}>✨ Top Engineering Colleges in Telangana 🎓</h2>
-        <p style={{ fontSize: "1.2rem", margin: "10px 0" }}>🌟 Explore, Compare & Discover the Best for Your Future 🚀</p>
+        <h2 style={{ fontWeight: "bold", fontSize: "2rem", marginBottom: "10px" }}>
+          ✨ Top Engineering Colleges in Telangana 🎓
+        </h2>
+        <p style={{ fontSize: "1.2rem", margin: "10px 0" }}>
+          🌟 Explore, Compare & Discover the Best for Your Future 🚀
+        </p>
         <div style={{ fontSize: "1.5rem" }}>📚 💻 🏆 🔬 🏫 🎓</div>
       </div>
 
-      <div className="container mt-4">
+      {/* Colleges Grid */}
+      <div className="container mt-4 mb-5">
         <div className="row gy-4">
           {colleges.map((college) => (
             <div key={college.id} className="col-12 col-md-6 col-lg-4">
               <div
-                className="card h-50 p-3 bg-light d-flex flex-column justify-content-between"
+                className="card h-100 p-3"
                 style={{
-                  background: "linear-gradient(135deg, #f0f4f8, #d9e6ecff)",
-                  boxShadow: "0px 6px 20px rgba(0,0,0,0.7)",
-                  borderRadius: "12px",
-                  minHeight: "400px",
+                  background: "linear-gradient(135deg, #ffffff, #f8f9fa)",
+                  boxShadow: "0px 8px 25px rgba(0,0,0,0.15)",
+                  borderRadius: "15px",
+                  border: "1px solid #e9ecef",
+                  transition: "transform 0.3s ease, box-shadow 0.3s ease",
+                  minHeight: "450px",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = "translateY(-5px)";
+                  e.currentTarget.style.boxShadow = "0px 15px 35px rgba(0,0,0,0.2)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = "translateY(0)";
+                  e.currentTarget.style.boxShadow = "0px 8px 25px rgba(0,0,0,0.15)";
                 }}
               >
-                <div className="d-flex align-items-center mb-3">
+                {/* College Header */}
+                <div className="d-flex align-items-start mb-3">
                   <img
                     src={college.logo}
                     alt={`${college.name} Logo`}
                     style={{
-                      width: "80px",
-                      height: "80px",
+                      width: "70px",
+                      height: "70px",
                       borderRadius: "50%",
-                      boxShadow: "0px 6px 20px rgba(0,0,0,0.7)",
+                      boxShadow: "0px 4px 15px rgba(0,0,0,0.2)",
                       objectFit: "cover",
                       marginRight: "15px",
+                      flexShrink: 0,
                     }}
                   />
-                  <h5 className="fw-bold mb-0">{college.name}</h5>
+                  <div>
+                    <h5 className="fw-bold mb-2" style={{ fontSize: "1.1rem", lineHeight: "1.3" }}>
+                      {college.name}
+                    </h5>
+                    <div className="d-flex align-items-center mb-1">
+                      <span className="badge bg-primary me-2">Rank #{college.rank}</span>
+                      <span className="badge bg-success">⭐ {college.descOverrides[5]}</span>
+                    </div>
+                  </div>
                 </div>
-                <p className="flex-grow-1">{college.description}</p>
-                <div className="d-flex align-items-center mb-2">
-                  <i className="bi bi-globe text-primary me-2"></i>
+
+                {/* Description */}
+                <p className="text-muted mb-3" style={{ fontSize: "0.95rem", lineHeight: "1.5" }}>
+                  {college.description}
+                </p>
+
+                {/* Quick Info */}
+                <div className="mb-3">
+                  <div className="row g-2">
+                    <div className="col-12">
+                      <div className="d-flex align-items-center mb-2">
+                        <i className="bi bi-cash-coin text-success me-2"></i>
+                        <small><strong>Fee:</strong> {college.descOverrides[2]}</small>
+                      </div>
+                    </div>
+                    <div className="col-12">
+                      <div className="d-flex align-items-center mb-2">
+                        <i className="bi bi-building text-primary me-2"></i>
+                        <small><strong>Type:</strong> {college.type} | {college.affiliation}</small>
+                      </div>
+                    </div>
+                    <div className="col-12">
+                      <div className="d-flex align-items-center mb-2">
+                        <i className="bi bi-briefcase-fill text-warning me-2"></i>
+                        <small><strong>Placements:</strong> {college.descOverrides[0]}</small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Website Link */}
+                <div className="mb-3">
                   <a
                     href={college.website}
                     target="_blank"
                     rel="noopener noreferrer"
-                    style={{ textDecoration: "none", color: "#007bff", wordBreak: "break-word" }}
+                    className="text-decoration-none d-flex align-items-center"
+                    style={{ color: "#0066cc", fontSize: "0.9rem" }}
                   >
-                    {college.website}
+                    <i className="bi bi-globe me-2"></i>
+                    <span className="text-truncate">Visit Website</span>
+                    <i className="bi bi-box-arrow-up-right ms-1" style={{ fontSize: "0.8rem" }}></i>
                   </a>
-                  <i className="bi bi-building ms-2 text-secondary" title="More Info"></i>
-                  {college.affiliation}
-                  <i className="bi bi-bank ms-2 text-secondary" title="Type of College"></i>
-                  {college.type}
-                  <i className="bi bi-people-fill ms-2 text-secondary" title="Co-education"></i>
-                  {college.coeducation}
                 </div>
 
-
-                <div className="d-flex gap-2 mt-auto m-auto">
-                  <button className="btn btn-success" onClick={() => setActiveModalId(college.id)}>
-                    <i className="bi bi-info-circle-fill me-1"></i> More Info
+                {/* Action Buttons */}
+                <div className="d-flex gap-2 mt-auto">
+                  <button 
+                    className="btn btn-outline-primary flex-fill"
+                    onClick={() => setActiveModalId(college.id)}
+                    style={{ borderRadius: "8px" }}
+                  >
+                    <i className="bi bi-info-circle me-1"></i>
+                    Details
                   </button>
-                  <Link to="/college-predictor" className="btn btn-primary">
-                    <i className="bi bi-search me-1"></i> Search Now
-                  </Link>
+                  <button 
+                    className="btn btn-primary flex-fill"
+                    style={{ borderRadius: "8px" }}
+                  >
+                    <i className="bi bi-search me-1"></i>
+                    Search
+                  </button>
                 </div>
               </div>
             </div>
@@ -232,74 +286,141 @@ function CollegeCard() {
         </div>
       </div>
 
-      <Footer />
-
+      {/* Modal */}
       {colleges.map(
         (college) =>
           activeModalId === college.id && (
             <div
               key={college.id}
               className="modal fade show"
-              style={{ display: "block", backgroundColor: "rgba(0,0,0,0.7)" }}
+              style={{ 
+                display: "block", 
+                backgroundColor: "rgba(0,0,0,0.7)",
+                zIndex: 1050 
+              }}
               tabIndex="-1"
               onClick={() => setActiveModalId(null)}
             >
               <div
-                className="modal-dialog modal-lg modal-dialog-centered"
+                className="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable"
                 onClick={(e) => e.stopPropagation()}
               >
-                <div className="modal-content p-3">
-                  <div className="d-flex align-items-center mb-3">
-                    <img
-                      src={college.logo}
-                      alt={`${college.name} Logo`}
-                      style={{
-                        width: "70px",
-                        height: "70px",
-                        borderRadius: "50%",
-                        objectFit: "cover",
-                        marginRight: "15px",
-                      }}
-                    />
-                    <h5 className="fw-bold mb-0">{college.name}</h5>
-                  </div>
-
-                  <div className="row">
-                    {commonDetails.map((item, index) => (
-                      <div key={index} className="col-md-6 mb-3">
-                        <div className="p-3 bg-white rounded h-100" style={{ boxShadow: "0px 6px 20px rgba(0,0,0,0.7)" }}>
-                          <i className={`${item.icon} text-primary fs-4 mb-2`}></i>
-                          <h6 className="fw-bold">{item.title}</h6>
-                          <p className="mb-0">{college.descOverrides[index] || "N/A"}</p>
+                <div className="modal-content" style={{ borderRadius: "15px" }}>
+                  <div className="modal-header border-0 pb-0">
+                    <div className="d-flex align-items-center">
+                      <img
+                        src={college.logo}
+                        alt={`${college.name} Logo`}
+                        style={{
+                          width: "60px",
+                          height: "60px",
+                          borderRadius: "50%",
+                          objectFit: "cover",
+                          marginRight: "15px",
+                        }}
+                      />
+                      <div>
+                        <h5 className="fw-bold mb-1">{college.name}</h5>
+                        <div className="d-flex align-items-center">
+                          <span className="badge bg-primary me-2">Rank #{college.rank}</span>
+                          <span className="badge bg-success">⭐ {college.descOverrides[5]}</span>
                         </div>
                       </div>
-                    ))}
-
-                    {extraDetails.map((item, index) => (
-                      <div key={`extra-${index}`} className="col-md-6 mb-3">
-                        <div className="p-3 bg-white rounded h-100" style={{ boxShadow: "0px 6px 20px rgba(0,0,0,0.7)" }}>
-                          <i className={`${item.icon} text-success fs-4 mb-2`}></i>
-                          <h6 className="fw-bold">{item.title}</h6>
-                          {item.isLink ? (
-                            <a href={college[item.key]} target="_blank" rel="noopener noreferrer">
-                              {college[item.key]}
-                            </a>
-                          ) : (
-                            <p className="mb-0">{college[item.key] || "N/A"}</p>
-                          )}
-                        </div>
-                      </div>
-                    ))}
+                    </div>
+                    <button 
+                      type="button" 
+                      className="btn-close" 
+                      onClick={() => setActiveModalId(null)}
+                    ></button>
                   </div>
 
-                  <div className="text-end mt-3">
-                    <button className="btn btn-danger" onClick={() => setActiveModalId(null)}>Close</button>
+                  <div className="modal-body">
+                    <div className="row g-3">
+                      {commonDetails.map((item, index) => (
+                        <div key={index} className="col-md-6">
+                          <div 
+                            className="p-3 bg-light rounded h-100" 
+                            style={{ 
+                              boxShadow: "0px 2px 8px rgba(0,0,0,0.1)",
+                              border: "1px solid #e9ecef" 
+                            }}
+                          >
+                            <div className="d-flex align-items-center mb-2">
+                              <i className={`${item.icon} text-primary fs-5 me-2`}></i>
+                              <h6 className="fw-bold mb-0">{item.title}</h6>
+                            </div>
+                            <p className="mb-0 text-muted">
+                              {college.descOverrides[index] || "N/A"}
+                            </p>
+                          </div>
+                        </div>
+                      ))}
+
+                      {extraDetails.map((item, index) => (
+                        <div key={`extra-${index}`} className="col-md-6">
+                          <div 
+                            className="p-3 bg-light rounded h-100" 
+                            style={{ 
+                              boxShadow: "0px 2px 8px rgba(0,0,0,0.1)",
+                              border: "1px solid #e9ecef" 
+                            }}
+                          >
+                            <div className="d-flex align-items-center mb-2">
+                              <i className={`${item.icon} text-success fs-5 me-2`}></i>
+                              <h6 className="fw-bold mb-0">{item.title}</h6>
+                            </div>
+                            {item.isLink ? (
+                              <a 
+                                href={college[item.key]} 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className="text-decoration-none"
+                              >
+                                <i className="bi bi-box-arrow-up-right me-1"></i>
+                                Visit Website
+                              </a>
+                            ) : (
+                              <p className="mb-0 text-muted">
+                                {college[item.key] || "N/A"}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="modal-footer border-0">
+                    <button 
+                      className="btn btn-secondary" 
+                      onClick={() => setActiveModalId(null)}
+                    >
+                      Close
+                    </button>
+                    <a 
+                      href={college.website} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="btn btn-primary"
+                    >
+                      <i className="bi bi-globe me-1"></i>
+                      Visit Website
+                    </a>
                   </div>
                 </div>
               </div>
             </div>
           )
       )}
+
+      {/* CSS Animation */}
+      <style jsx>{`
+        @keyframes gradientBG {
+          0% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
+        }
+      `}</style>
     </>
   );
 }

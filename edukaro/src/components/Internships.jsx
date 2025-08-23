@@ -89,10 +89,8 @@ const studentsData = [
 function Internships() {
   return (
     <>
-      <Navbar />
       <div
         style={{
-          marginTop: "100px",
           padding: "100px",
           background: "linear-gradient(90deg, #ff9af7ff, #ebc4faff, #ddc2fbff, #a1fdbeff, #c2e9fb)",
           backgroundSize: "300% 300%",
@@ -148,7 +146,6 @@ function Internships() {
           ))}
         </div>
       </div>
-      <Footer />
     </>
   )
 }

@@ -14,7 +14,6 @@ function Carousel() {
       color: "#222",
       boxShadow: "0 4px 15px rgba(0,0,0,0.2)",
       paddingTop: "100px",
-      marginTop: "100px"
     }}>
       <h2 style={{ fontWeight: "bold", fontSize: "2rem" }}>
         🎓 Discover Telangana’s Premier Engineering Colleges ✨

@@ -5,17 +5,14 @@ import Footer from './Footer'
 function ReservationPolicy() {
   return (
     <>
-      <Navbar />
        <div
         style={{
-          marginTop:"100px",
           padding: "100px",
           background: "linear-gradient(90deg, #73b1d0ff, #57ba46ff, #c260a6ff, #8d6cd6ff, #60cdcbff)",
           backgroundSize: "300% 300%",
           animation: "gradientBG 8s ease infinite",
           padding: "30px 20px",
           borderRadius: "0 0 20px 20px",
-          marginTop:"100px",
           textAlign: "center",
           color: "#222",
           boxShadow: "0 4px 15px rgba(0,0,0,0.5)"
@@ -209,7 +206,6 @@ function ReservationPolicy() {
         </div>
       </div>
     </div>
-    <Footer />
     </>
   )
 }
