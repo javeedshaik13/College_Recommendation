@@ -1,7 +1,6 @@
-import React from 'react'
-import Navbar from './Navbar'
-import Footer from './Footer'
-
+import React from 'react';
+import Navbar from './Navbar';
+import Footer from './Footer';
 
 const studentsData = [
   {
@@ -80,7 +79,7 @@ const studentsData = [
     img: "https://documents.bcci.tv/resizedimageskirti/2740_compress.png",
     college: "IIIT Delhi",
     branch: "Electronics and Communication",
-    program: "IEEE Men   in Tech Scholarship",
+    program: "IEEE Men in Tech Scholarship",
     type: "Scholarship",
     year: "2nd Year"
   }
@@ -89,54 +88,100 @@ const studentsData = [
 function Internships() {
   return (
     <>
-      <div
-        style={{
-          padding: "100px",
-          background: "linear-gradient(90deg, #ff9af7ff, #ebc4faff, #ddc2fbff, #a1fdbeff, #c2e9fb)",
-          backgroundSize: "300% 300%",
-          animation: "gradientBG 8s ease infinite",
-          padding: "30px 20px",
-          borderRadius: "0 0 20px 20px",
-          textAlign: "center",
-          color: "#222",
-          boxShadow: "0 4px 15px rgba(0,0,0,0.7)"
-        }}
-      >
-        <h2 style={{ fontWeight: "bold", fontSize: "2rem" }}>✨ Internship and Scholarship Opportunities secured at Top Engineering Colleges in Telangana 🎓</h2>
-        <p style={{ fontSize: "1.2rem", margin: "10px 0" }}>🌟Make a difference in your career with your exclusive opportunities! in Colleges 🚀</p>
-        <div style={{ fontSize: "1.5rem" }}>📚 💻 🏆 🔬 🏫 🎓</div>
+      <Navbar />
+
+      {/* Hero Section */}
+      <div className="internship-hero">
+        <h2 className="internship-title">
+          ✨ Internship and Scholarship Opportunities at Top Engineering Colleges in Telangana 🎓
+        </h2>
+        <p className="internship-subtitle">
+          🌟 Make a difference in your career with your exclusive opportunities! 🚀
+        </p>
+        <div className="internship-emojis">📚 💻 🏆 🔬 🏫 🎓</div>
+
+        <style jsx>{`
+          .internship-hero {
+            background: linear-gradient(
+              90deg,
+              #ff9af7ff,
+              #ebc4faff,
+              #ddc2fbff,
+              #a1fdbeff,
+              #c2e9fb
+            );
+            background-size: 300% 300%;
+            animation: gradientBG 8s ease infinite;
+            border-radius: 0 0 20px 20px;
+            text-align: center;
+            color: #222;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.7);
+            padding: 60px 20px;
+            min-height: 250px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+          }
+
+          .internship-title {
+            font-size: clamp(1.5rem, 4vw, 2rem);
+            font-weight: 700;
+            margin-bottom: 10px;
+          }
+
+          .internship-subtitle {
+            font-size: clamp(1rem, 3vw, 1.2rem);
+            font-weight: 600;
+            margin: 5px 0;
+          }
+
+          .internship-emojis {
+            font-size: clamp(1rem, 3.5vw, 1.5rem);
+          }
+
+          @media (max-width: 768px) {
+            .internship-hero {
+              padding: 15px 10px;
+              min-height: 120px;
+            }
+            .internship-title {
+              font-size: 1.2rem;
+            }
+            .internship-subtitle {
+              font-size: 0.9rem;
+            }
+            .internship-emojis {
+              font-size: 1rem;
+            }
+          }
+
+          @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+          }
+        `}</style>
       </div>
-      <div className="container mt-5">
+
+      {/* Students Cards */}
+      <div className="container mt-4 mb-5">
         <h2 className="text-center fw-bold mb-4">🎓 Student Internships & Scholarships</h2>
-        <div className="row">
+        <div className="row g-3">
           {studentsData.map((student) => (
-            <div key={student.id} className="col-md-3 mb-4">
-              <div
-                className="card h-100 shadow-lg rounded-4"
-                style={{ border: "none", background: "whitesmoke" }}
-              >
+            <div key={student.id} className="col-6 col-md-3">
+              <div className="card h-100 shadow-lg rounded-4 student-card">
                 <img
                   src={student.img}
-                  className="card-img-top"
                   alt={student.name}
-                  style={{
-                    height: "220px",
-                    width: "100%",
-                    objectFit: "contain",     // fills the space without stretching
-                    borderTopLeftRadius: "15px", // rounded corners
-                    borderTopRightRadius: "15px"
-                  }}
+                  className="card-img-top"
                 />
-
                 <div className="card-body text-center">
                   <h5 className="fw-bold">{student.name}</h5>
                   <p className="mb-1">🏫 {student.college}</p>
                   <p className="mb-1">📚 {student.branch}</p>
                   <p className="mb-1">📅 {student.year}</p>
-                  <span
-                    className={`badge ${student.type === "Internship" ? "bg-success" : "bg-primary"
-                      } mb-2`}
-                  >
+                  <span className={`badge ${student.type === "Internship" ? "bg-success" : "bg-primary"} mb-2`}>
                     {student.type}
                   </span>
                   <p className="fw-semibold">{student.program}</p>
@@ -146,9 +191,37 @@ function Internships() {
           ))}
         </div>
       </div>
+
+
+      {/* Student Cards & Images Responsive Styles */}
+      <style jsx>{`
+        .student-card {
+          background: whitesmoke;
+          border: none;
+          borderShadow: 0 4px 15px rgba(0, 0, 0, 0.7);
+        }
+        .student-card img {
+          height: 180px;
+          width: 100%;
+          object-fit: contain;
+          border-top-left-radius: 15px;
+          border-top-right-radius: 15px;
+        }
+
+        @media (max-width: 768px) {
+          .student-card img {
+            height: 120px;
+          }
+          .card-body h5 {
+            font-size: 1rem;
+          }
+          .card-body p, .card-body span, .card-body .fw-semibold {
+            font-size: 0.85rem;
+          }
+        }
+      `}</style>
     </>
-  )
+  );
 }
 
 export default Internships;
-

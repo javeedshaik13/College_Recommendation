@@ -211,32 +211,77 @@ function CollegePredictor() {
     const branch = branchList.find(b => b.code === code);
     return branch ? `${code} - ${branch.name}` : code;
   };
-
   return (
     <>
-      {/* Header Section */}
-      <div
-        className="container"
-        style={{
-          background: "linear-gradient(90deg, #ff9afdff, #afe066ff, #9cbabfff, #56abc3ff, #cf6f6fff)",
-          backgroundSize: "300% 300%",
-          minHeight: "40vh",
-          animation: "gradientBG 8s ease infinite",
-          borderRadius: "20px",
-          textAlign: "center",
-          color: "#222",
-          boxShadow: "0 4px 15px rgba(0,0,0,0.2)",
-          padding: "60px 20px",
-          marginTop: "20px"
-        }}
-      >
-        <h2 style={{ fontWeight: "bold", fontSize: "2rem" }}>
+      <div className="header-banner">
+        <h2 className="fw-bold header-title">
           🎓 Welcome To My College Predictor Engineering Colleges ✨
         </h2>
-        <p style={{ fontSize: "1.2rem", margin: "10px 0" }}>
+
+        <p className="header-subtitle">
           🔍 Explore facilities, and plan your dream career path 🚀
         </p>
       </div>
+
+      <style jsx>{`
+        .header-banner {
+          background: linear-gradient(
+            90deg,
+            #ff9afdff,
+            #afe066ff,
+            #9cbabfff,
+            #56abc3ff,
+            #cf6f6fff
+          );
+          background-size: 300% 300%;
+          height: 35vh;
+          min-height: 180px;
+          animation: gradientBG 8s ease infinite;
+          border-radius: 20px;
+          text-align: center;
+          color: #222;
+          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+          padding: 40px 20px;
+          margin-top: 20px;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+        }
+
+        .header-title {
+          font-size: clamp(1.2rem, 4vw, 2rem);
+          margin-bottom: 10px;
+        }
+
+        .header-subtitle {
+          font-size: clamp(0.9rem, 3vw, 1.2rem);
+          margin: 5px 0;
+        }
+
+        /* Mobile View (half height) */
+        @media (max-width: 768px) {
+          .header-banner {
+            height: 18vh;
+            min-height: 120px;
+            padding: 20px 15px;
+          }
+        }
+
+        @keyframes gradientBG {
+          0% {
+            background-position: 0% 50%;
+          }
+          50% {
+            background-position: 100% 50%;
+          }
+          100% {
+            background-position: 0% 50%;
+          }
+        }
+      `}</style>;
+
+
 
       {/* Main Form */}
       <div className="container mt-4 mb-5">

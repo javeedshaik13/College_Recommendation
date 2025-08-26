@@ -177,7 +177,7 @@ function CollegeCard() {
                 className="card h-100 p-3"
                 style={{
                   background: "linear-gradient(135deg, #ffffff, #f8f9fa)",
-                  boxShadow: "0px 8px 25px rgba(0,0,0,0.15)",
+                  boxShadow: "0px 8px 25px rgba(0,0,0,0.5)",
                   borderRadius: "15px",
                   border: "1px solid #e9ecef",
                   transition: "transform 0.3s ease, box-shadow 0.3s ease",
