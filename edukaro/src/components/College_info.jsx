@@ -147,26 +147,85 @@ function CollegeCard() {
   return (
     <>
       {/* Header Section */}
-      <div
-        style={{
-          background: "linear-gradient(90deg, #ff9a9e, #c4fac5ff, #fbc2eb, #a1c4fd, #c2e9fb)",
-          backgroundSize: "300% 300%",
-          animation: "gradientBG 8s ease infinite",
-          padding: "30px 20px",
-          borderRadius: "0 0 20px 20px",
-          textAlign: "center",
-          color: "#222",
-          boxShadow: "0 4px 15px rgba(0,0,0,0.5)"
-        }}
-      >
-        <h2 style={{ fontWeight: "bold", fontSize: "2rem", marginBottom: "10px" }}>
-          ✨ Top Engineering Colleges in Telangana 🎓
-        </h2>
-        <p style={{ fontSize: "1.2rem", margin: "10px 0" }}>
-          🌟 Explore, Compare & Discover the Best for Your Future 🚀
-        </p>
-        <div style={{ fontSize: "1.5rem" }}>📚 💻 🏆 🔬 🏫 🎓</div>
-      </div>
+      <div className="colleges-hero">
+  <h2 className="colleges-title">
+    ✨ Top Engineering Colleges in Telangana 🎓
+  </h2>
+  <p className="colleges-subtitle">
+    🌟 Explore, Compare & Discover the Best for Your Future 🚀
+  </p>
+  <div className="colleges-emojis">📚 💻 🏆 🔬 🏫 🎓</div>
+
+  <style jsx>{`
+    .colleges-hero {
+      background: linear-gradient(
+        90deg,
+        #ff9a9e,
+        #c4fac5ff,
+        #fbc2eb,
+        #a1c4fd,
+        #c2e9fb
+      );
+      background-size: 300% 300%;
+      animation: gradientBG 8s ease infinite;
+      border-radius: 0 0 20px 20px;
+      text-align: center;
+      color: #222;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+      padding: 40px 15px;
+      min-height: 200px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .colleges-title {
+      font-size: clamp(1.2rem, 4vw, 2rem);
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .colleges-subtitle {
+      font-size: clamp(1rem, 3vw, 1.2rem);
+      font-weight: 600;
+      margin: 8px 0;
+    }
+
+    .colleges-emojis {
+      font-size: clamp(1rem, 3.5vw, 1.5rem);
+      margin-top: 5px;
+    }
+
+    /* Mobile View */
+    @media (max-width: 768px) {
+      .colleges-hero {
+        padding: 20px 12px;
+        min-height: 120px;
+        border-radius: 0 0 15px 15px;
+      }
+
+      .colleges-title {
+        font-size: 1.3rem;
+      }
+
+      .colleges-subtitle {
+        font-size: 1rem;
+      }
+
+      .colleges-emojis {
+        font-size: 1.2rem;
+      }
+    }
+
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+  `}</style>
+</div>
+
 
       {/* Colleges Grid */}
       <div className="container mt-4 mb-5">
