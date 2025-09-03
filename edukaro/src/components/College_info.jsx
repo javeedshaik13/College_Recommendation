@@ -143,104 +143,117 @@ const colleges = [
 
 function CollegeCard() {
   const [activeModalId, setActiveModalId] = useState(null);
+  const [showAll, setShowAll] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  // Handle window resize
+  React.useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Determine which colleges to display
+  const displayedColleges = isMobile && !showAll ? colleges.slice(0, 3) : colleges;
 
   return (
     <>
       {/* Header Section */}
       <div className="colleges-hero">
-  <h2 className="colleges-title">
-    ✨ Top Engineering Colleges in Telangana 🎓
-  </h2>
-  <p className="colleges-subtitle">
-    🌟 Explore, Compare & Discover the Best for Your Future 🚀
-  </p>
-  <div className="colleges-emojis">📚 💻 🏆 🔬 🏫 🎓</div>
+        <h2 className="colleges-title">
+          ✨ Top Engineering Colleges in Telangana 🎓
+        </h2>
+        <p className="colleges-subtitle">
+          🌟 Explore, Compare & Discover the Best for Your Future 🚀
+        </p>
+        <div className="colleges-emojis">📚 💻 🏆 🔬 🏫 🎓</div>
 
-  <style jsx>{`
-    .colleges-hero {
-      background: linear-gradient(
-        90deg,
-        #ff9a9e,
-        #c4fac5ff,
-        #fbc2eb,
-        #a1c4fd,
-        #c2e9fb
-      );
-      background-size: 300% 300%;
-      animation: gradientBG 8s ease infinite;
-      border-radius: 0 0 20px 20px;
-      text-align: center;
-      color: #222;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
-      padding: 40px 15px;
-      min-height: 200px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-    }
+        <style jsx>{`
+          .colleges-hero {
+            background: linear-gradient(
+              90deg,
+              #ff9a9e,
+              #c4fac5ff,
+              #fbc2eb,
+              #a1c4fd,
+              #c2e9fb
+            );
+            background-size: 300% 300%;
+            animation: gradientBG 8s ease infinite;
+            border-radius: 0 0 20px 20px;
+            text-align: center;
+            color: #222;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            padding: 40px 15px;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+          }
 
-    .colleges-title {
-      font-size: clamp(1.2rem, 4vw, 2rem);
-      font-weight: 700;
-      margin-bottom: 10px;
-    }
+          .colleges-title {
+            font-size: clamp(1.2rem, 4vw, 2rem);
+            font-weight: 700;
+            margin-bottom: 10px;
+          }
 
-    .colleges-subtitle {
-      font-size: clamp(1rem, 3vw, 1.2rem);
-      font-weight: 600;
-      margin: 8px 0;
-    }
+          .colleges-subtitle {
+            font-size: clamp(1rem, 3vw, 1.2rem);
+            font-weight: 600;
+            margin: 8px 0;
+          }
 
-    .colleges-emojis {
-      font-size: clamp(1rem, 3.5vw, 1.5rem);
-      margin-top: 5px;
-    }
+          .colleges-emojis {
+            font-size: clamp(1rem, 3.5vw, 1.5rem);
+            margin-top: 5px;
+          }
 
-    /* Mobile View */
-    @media (max-width: 768px) {
-      .colleges-hero {
-        padding: 20px 12px;
-        min-height: 120px;
-        border-radius: 0 0 15px 15px;
-      }
+          /* Mobile View */
+          @media (max-width: 768px) {
+            .colleges-hero {
+              padding: 20px 12px;
+              min-height: 120px;
+              border-radius: 0 0 15px 15px;
+            }
 
-      .colleges-title {
-        font-size: 1.3rem;
-      }
+            .colleges-title {
+              font-size: 1.3rem;
+            }
 
-      .colleges-subtitle {
-        font-size: 1rem;
-      }
+            .colleges-subtitle {
+              font-size: 1rem;
+            }
 
-      .colleges-emojis {
-        font-size: 1.2rem;
-      }
-    }
+            .colleges-emojis {
+              font-size: 1.2rem;
+            }
+          }
 
-    @keyframes gradientBG {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-  `}</style>
-</div>
-
+          @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+          }
+        `}</style>
+      </div>
 
       {/* Colleges Grid */}
       <div className="container mt-4 mb-5">
         <div className="row gy-4">
-          {colleges.map((college) => (
+          {displayedColleges.map((college) => (
             <div key={college.id} className="col-12 col-md-6 col-lg-4">
               <div
-                className="card h-100 p-3"
+                className="card h-100 p-2 p-md-3"
                 style={{
                   background: "linear-gradient(135deg, #ffffff, #f8f9fa)",
                   boxShadow: "0px 8px 25px rgba(0,0,0,0.5)",
                   borderRadius: "15px",
                   border: "1px solid #e9ecef",
                   transition: "transform 0.3s ease, box-shadow 0.3s ease",
-                  minHeight: "450px",
+                  minHeight: isMobile ? "380px" : "450px",
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.transform = "translateY(-5px)";
@@ -257,17 +270,17 @@ function CollegeCard() {
                     src={college.logo}
                     alt={`${college.name} Logo`}
                     style={{
-                      width: "70px",
-                      height: "70px",
+                      width: isMobile ? "50px" : "70px",
+                      height: isMobile ? "50px" : "70px",
                       borderRadius: "50%",
                       boxShadow: "0px 4px 15px rgba(0,0,0,0.2)",
                       objectFit: "cover",
-                      marginRight: "15px",
+                      marginRight: isMobile ? "10px" : "15px",
                       flexShrink: 0,
                     }}
                   />
                   <div>
-                    <h5 className="fw-bold mb-2" style={{ fontSize: "1.1rem", lineHeight: "1.3" }}>
+                    <h5 className="fw-bold mb-2" style={{ fontSize: isMobile ? "0.9rem" : "1.1rem", lineHeight: "1.3" }}>
                       {college.name}
                     </h5>
                     <div className="d-flex align-items-center mb-1">
@@ -278,7 +291,7 @@ function CollegeCard() {
                 </div>
 
                 {/* Description */}
-                <p className="text-muted mb-3" style={{ fontSize: "0.95rem", lineHeight: "1.5" }}>
+                <p className="text-muted mb-3" style={{ fontSize: isMobile ? "0.85rem" : "0.95rem", lineHeight: "1.4" }}>
                   {college.description}
                 </p>
 
@@ -286,21 +299,21 @@ function CollegeCard() {
                 <div className="mb-3">
                   <div className="row g-2">
                     <div className="col-12">
-                      <div className="d-flex align-items-center mb-2">
-                        <i className="bi bi-cash-coin text-success me-2"></i>
-                        <small><strong>Fee:</strong> {college.descOverrides[2]}</small>
+                      <div className="d-flex align-items-center mb-1 mb-md-2">
+                        <i className="bi bi-cash-coin text-success me-1 me-md-2" style={{fontSize: isMobile ? '0.8rem' : '1rem'}}></i>
+                        <small style={{fontSize: isMobile ? '0.75rem' : '0.875rem'}}><strong>Fee:</strong> {college.descOverrides[2]}</small>
                       </div>
                     </div>
                     <div className="col-12">
-                      <div className="d-flex align-items-center mb-2">
-                        <i className="bi bi-building text-primary me-2"></i>
-                        <small><strong>Type:</strong> {college.type} | {college.affiliation}</small>
+                      <div className="d-flex align-items-center mb-1 mb-md-2">
+                        <i className="bi bi-building text-primary me-1 me-md-2" style={{fontSize: isMobile ? '0.8rem' : '1rem'}}></i>
+                        <small style={{fontSize: isMobile ? '0.75rem' : '0.875rem'}}><strong>Type:</strong> {college.type} | {college.affiliation}</small>
                       </div>
                     </div>
                     <div className="col-12">
-                      <div className="d-flex align-items-center mb-2">
-                        <i className="bi bi-briefcase-fill text-warning me-2"></i>
-                        <small><strong>Placements:</strong> {college.descOverrides[0]}</small>
+                      <div className="d-flex align-items-center mb-1 mb-md-2">
+                        <i className="bi bi-briefcase-fill text-warning me-1 me-md-2" style={{fontSize: isMobile ? '0.8rem' : '1rem'}}></i>
+                        <small style={{fontSize: isMobile ? '0.75rem' : '0.875rem'}}><strong>Placements:</strong> {college.descOverrides[0]}</small>
                       </div>
                     </div>
                   </div>
@@ -313,7 +326,7 @@ function CollegeCard() {
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-decoration-none d-flex align-items-center"
-                    style={{ color: "#0066cc", fontSize: "0.9rem" }}
+                    style={{ color: "#0066cc", fontSize: isMobile ? "0.8rem" : "0.9rem" }}
                   >
                     <i className="bi bi-globe me-2"></i>
                     <span className="text-truncate">Visit Website</span>
@@ -326,14 +339,14 @@ function CollegeCard() {
                   <button 
                     className="btn btn-outline-primary flex-fill"
                     onClick={() => setActiveModalId(college.id)}
-                    style={{ borderRadius: "8px" }}
+                    style={{ borderRadius: "8px", fontSize: isMobile ? "0.8rem" : "0.875rem", padding: isMobile ? "6px 8px" : "8px 12px" }}
                   >
                     <i className="bi bi-info-circle me-1"></i>
                     Details
                   </button>
                   <button 
                     className="btn btn-primary flex-fill"
-                    style={{ borderRadius: "8px" }}
+                    style={{ borderRadius: "8px", fontSize: isMobile ? "0.8rem" : "0.875rem", padding: isMobile ? "6px 8px" : "8px 12px" }}
                   >
                     <i className="bi bi-search me-1"></i>
                     Search
@@ -343,6 +356,39 @@ function CollegeCard() {
             </div>
           ))}
         </div>
+        
+        {/* Show More Button for Mobile */}
+        {isMobile && colleges.length > 3 && (
+          <div className="text-center mt-4">
+            <button 
+              className="btn btn-lg px-4 py-2 fw-bold shadow-lg"
+              onClick={() => setShowAll(!showAll)}
+              style={{
+                background: showAll 
+                  ? "linear-gradient(45deg, #dc3545, #fd7e14)" 
+                  : "linear-gradient(45deg, #28a745, #20c997)",
+                border: "none",
+                borderRadius: "25px",
+                color: "white",
+                fontSize: "1rem",
+                transition: "all 0.3s ease",
+                minWidth: "200px"
+              }}
+            >
+              {showAll ? (
+                <>
+                  <i className="bi bi-eye-slash me-2"></i>
+                  Show Less Colleges
+                </>
+              ) : (
+                <>
+                  <i className="bi bi-eye me-2"></i>
+                  Show More Colleges ({colleges.length - 3} more)
+                </>
+              )}
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Modal */}

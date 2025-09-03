@@ -298,102 +298,184 @@ function CollegeRankings() {
   }
 
   const CollegeCard = ({ college, rank }) => (
-    <div className="col-12 mb-4">
+    <div className="col-lg-12 col-md-6 mb-3">
       <div className="card h-100 shadow-sm border-0 position-relative overflow-hidden">
         {rank <= 3 && (
           <div className={`position-absolute top-0 start-0 badge ${
             rank === 1 ? 'bg-warning' : rank === 2 ? 'bg-secondary' : 'bg-danger'
-          } rounded-0 rounded-end`} style={{ fontSize: '0.9rem', zIndex: 10 }}>
+          } rounded-0 rounded-end`} style={{ fontSize: '0.8rem', zIndex: 10 }}>
             #{rank}
           </div>
         )}
         
-        <div className="card-body p-4">
-          <div className="row align-items-center">
-            <div className="col-md-2 text-center mb-3 mb-md-0">
-              <img
-                src={college.logo}
-                alt={`${college.name} Logo`}
-                className="img-fluid rounded-circle"
-                style={{ width: '80px', height: '80px', objectFit: 'cover' }}
-                onError={(e) => {
-                  e.target.src = 'https://via.placeholder.com/80x80/007bff/ffffff?text=College'
-                }}
-              />
-              <div className="mt-2">
-                <span className="badge bg-primary">NIRF #{college.nirf_rank}</span>
+        <div className="card-body p-2 p-md-3 p-lg-4" style={{boxShadow:"0 4px 15px rgba(0,0,0,0.7)",borderRadius:"10px"}}>
+          {/* Mobile Layout */}
+          <div className="d-md-none">
+            <div className="row align-items-center mb-2">
+              <div className="col-3 text-center">
+                <img
+                  src={college.logo}
+                  alt={`${college.name} Logo`}
+                  className="img-fluid rounded-circle"
+                  style={{ width: '50px', height: '50px', objectFit: 'cover' }}
+                  onError={(e) => {
+                    e.target.src = 'https://via.placeholder.com/50x50/007bff/ffffff?text=C'
+                  }}
+                />
               </div>
-            </div>
-            
-            <div className="col-md-4">
-              <h5 className="card-title fw-bold text-primary mb-2">{college.name}</h5>
-              <div className="mb-2">
-                <i className="bi bi-geo-alt-fill text-danger me-2"></i>
-                <span className="text-muted">{college.location}</span>
-              </div>
-              <div className="mb-2">
-                <i className="bi bi-building text-success me-2"></i>
-                <span className="badge bg-light text-dark">{college.type}</span>
-                <span className="text-muted ms-2">Est. {college.establishedYear}</span>
-              </div>
-              <div className="mb-2">
-                <i className="bi bi-star-fill text-warning me-2"></i>
-                <span className="fw-bold">{college.rating}/5.0</span>
-              </div>
-            </div>
-            
-            <div className="col-md-3">
-              <div className="mb-2">
-                <small className="text-muted fw-bold">Cutoff Rank ({selectedCategory}):</small>
-                <div className="fs-5 fw-bold text-success">
-                  {college.cutoffs[selectedCategory] || 'N/A'}
-                </div>
-              </div>
-              <div className="mb-2">
-                <small className="text-muted fw-bold">Annual Fees:</small>
-                <div className="fw-bold text-info">
-                  {formatCurrency(college.fees)}
-                </div>
-              </div>
-              <div>
-                <small className="text-muted fw-bold">Branches:</small>
-                <div className="d-flex flex-wrap gap-1 mt-1">
-                  {college.branches.slice(0, 3).map(branch => (
-                    <span key={branch} className="badge bg-secondary">{branch}</span>
-                  ))}
-                  {college.branches.length > 3 && (
-                    <span className="badge bg-light text-dark">+{college.branches.length - 3}</span>
-                  )}
-                </div>
-              </div>
-            </div>
-            
-            <div className="col-md-3">
-              <div className="text-center">
-                <h6 className="text-muted mb-2">Placements</h6>
+              <div className="col-9">
+                <h6 className="card-title fw-bold text-primary mb-1" style={{fontSize: '0.9rem'}}>{college.name}</h6>
                 <div className="mb-1">
-                  <small className="text-muted">Highest:</small>
-                  <div className="fw-bold text-success">
-                    {formatCurrency(college.placements.highest)}
+                  <i className="bi bi-geo-alt-fill text-danger me-1" style={{fontSize: '0.7rem'}}></i>
+                  <span className="text-muted" style={{fontSize: '0.75rem'}}>{college.location}</span>
+                  <span className="badge bg-primary ms-2" style={{fontSize: '0.6rem'}}>NIRF #{college.nirf_rank}</span>
+                </div>
+                <div className="d-flex align-items-center gap-2">
+                  <span className="badge bg-light text-dark" style={{fontSize: '0.65rem'}}>{college.type}</span>
+                  <div className="d-flex align-items-center">
+                    <i className="bi bi-star-fill text-warning me-1" style={{fontSize: '0.7rem'}}></i>
+                    <span className="fw-bold" style={{fontSize: '0.75rem'}}>{college.rating}</span>
                   </div>
                 </div>
-                <div className="mb-1">
-                  <small className="text-muted">Average:</small>
-                  <div className="fw-bold text-primary">
+              </div>
+            </div>
+            
+            <div className="row g-2">
+              <div className="col-6">
+                <div className="bg-light p-2 rounded">
+                  <small className="text-muted fw-bold d-block" style={{fontSize: '0.65rem'}}>Cutoff ({selectedCategory})</small>
+                  <div className="fw-bold text-success" style={{fontSize: '0.8rem'}}>
+                    {college.cutoffs[selectedCategory] || 'N/A'}
+                  </div>
+                </div>
+              </div>
+              <div className="col-6">
+                <div className="bg-light p-2 rounded">
+                  <small className="text-muted fw-bold d-block" style={{fontSize: '0.65rem'}}>Fees</small>
+                  <div className="fw-bold text-info" style={{fontSize: '0.8rem'}}>
+                    {formatCurrency(college.fees)}
+                  </div>
+                </div>
+              </div>
+              <div className="col-6">
+                <div className="bg-light p-2 rounded">
+                  <small className="text-muted fw-bold d-block" style={{fontSize: '0.65rem'}}>Avg Package</small>
+                  <div className="fw-bold text-primary" style={{fontSize: '0.8rem'}}>
                     {formatCurrency(college.placements.average)}
                   </div>
                 </div>
-                <div className="mb-2">
-                  <small className="text-muted">Placement %:</small>
-                  <div className="fw-bold text-warning">
+              </div>
+              <div className="col-6">
+                <div className="bg-light p-2 rounded">
+                  <small className="text-muted fw-bold d-block" style={{fontSize: '0.65rem'}}>Placement %</small>
+                  <div className="fw-bold text-warning" style={{fontSize: '0.8rem'}}>
                     {college.placements.percentage}%
                   </div>
                 </div>
-                <div className="progress" style={{ height: '6px' }}>
-                  <div 
-                    className="progress-bar bg-success" 
-                    style={{ width: `${college.placements.percentage}%` }}
-                  ></div>
+              </div>
+            </div>
+            
+            <div className="mt-2">
+              <small className="text-muted fw-bold" style={{fontSize: '0.65rem'}}>Branches:</small>
+              <div className="d-flex flex-wrap gap-1 mt-1">
+                {college.branches.slice(0, 2).map(branch => (
+                  <span key={branch} className="badge bg-secondary" style={{fontSize: '0.6rem'}}>{branch}</span>
+                ))}
+                {college.branches.length > 2 && (
+                  <span className="badge bg-light text-dark" style={{fontSize: '0.6rem'}}>+{college.branches.length - 2}</span>
+                )}
+              </div>
+            </div>
+          </div>
+          
+          {/* Desktop Layout */}
+          <div className="d-none d-md-block">
+            <div className="row align-items-center">
+              <div className="col-md-2 text-center mb-3 mb-md-0">
+                <img
+                  src={college.logo}
+                  alt={`${college.name} Logo`}
+                  className="img-fluid rounded-circle"
+                  style={{ width: '80px', height: '80px', objectFit: 'cover' }}
+                  onError={(e) => {
+                    e.target.src = 'https://via.placeholder.com/80x80/007bff/ffffff?text=College'
+                  }}
+                />
+                <div className="mt-2">
+                  <span className="badge bg-primary">NIRF #{college.nirf_rank}</span>
+                </div>
+              </div>
+              
+              <div className="col-md-4">
+                <h5 className="card-title fw-bold text-primary mb-2">{college.name}</h5>
+                <div className="mb-2">
+                  <i className="bi bi-geo-alt-fill text-danger me-2"></i>
+                  <span className="text-muted">{college.location}</span>
+                </div>
+                <div className="mb-2">
+                  <i className="bi bi-building text-success me-2"></i>
+                  <span className="badge bg-light text-dark">{college.type}</span>
+                  <span className="text-muted ms-2">Est. {college.establishedYear}</span>
+                </div>
+                <div className="mb-2">
+                  <i className="bi bi-star-fill text-warning me-2"></i>
+                  <span className="fw-bold">{college.rating}/5.0</span>
+                </div>
+              </div>
+              
+              <div className="col-md-3">
+                <div className="mb-2">
+                  <small className="text-muted fw-bold">Cutoff Rank ({selectedCategory}):</small>
+                  <div className="fs-5 fw-bold text-success">
+                    {college.cutoffs[selectedCategory] || 'N/A'}
+                  </div>
+                </div>
+                <div className="mb-2">
+                  <small className="text-muted fw-bold">Annual Fees:</small>
+                  <div className="fw-bold text-info">
+                    {formatCurrency(college.fees)}
+                  </div>
+                </div>
+                <div>
+                  <small className="text-muted fw-bold">Branches:</small>
+                  <div className="d-flex flex-wrap gap-1 mt-1">
+                    {college.branches.slice(0, 3).map(branch => (
+                      <span key={branch} className="badge bg-secondary">{branch}</span>
+                    ))}
+                    {college.branches.length > 3 && (
+                      <span className="badge bg-light text-dark">+{college.branches.length - 3}</span>
+                    )}
+                  </div>
+                </div>
+              </div>
+              
+              <div className="col-md-3">
+                <div className="text-center">
+                  <h6 className="text-muted mb-2">Placements</h6>
+                  <div className="mb-1">
+                    <small className="text-muted">Highest:</small>
+                    <div className="fw-bold text-success">
+                      {formatCurrency(college.placements.highest)}
+                    </div>
+                  </div>
+                  <div className="mb-1">
+                    <small className="text-muted">Average:</small>
+                    <div className="fw-bold text-primary">
+                      {formatCurrency(college.placements.average)}
+                    </div>
+                  </div>
+                  <div className="mb-2">
+                    <small className="text-muted">Placement %:</small>
+                    <div className="fw-bold text-warning">
+                      {college.placements.percentage}%
+                    </div>
+                  </div>
+                  <div className="progress" style={{ height: '6px' }}>
+                    <div 
+                      className="progress-bar bg-success" 
+                      style={{ width: `${college.placements.percentage}%` }}
+                    ></div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -406,29 +488,29 @@ function CollegeRankings() {
   return (
     <>
       <Navbar />
-      <div className="container mt-4 mb-5">
+      <div className="container mt-2 mt-md-4 mb-3 mb-md-5 px-2 px-md-3">
         {/* Header */}
-        <div className="text-center mb-5">
-          <h1 className="display-4 fw-bold text-primary mb-3">
+        <div className="card text-center mb-4 mb-md-5 p-2 p-md-3" style={{boxShadow:"0 4px 15px rgba(0,0,0,0.4)",borderRadius:"10px"}}>
+          <h1 className="h3 h2-md display-md-5 fw-bold text-primary mb-2 mb-md-3">
             🏆 Top Engineering Colleges Rankings
           </h1>
-          <p className="lead text-muted">
+          <p className="small lead-md fw-bold mb-1 mb-md-0">
             Discover the best engineering colleges in Telangana based on NIRF rankings, placements, and cutoffs
           </p>
         </div>
 
         {/* Filters */}
-        <div className="row mb-4">
+        <div className="row mb-3 mb-md-4 g-2 g-md-3">
           <div className="col-md-6">
-            <label className="form-label fw-bold">
-              <i className="bi bi-person-badge text-primary me-2"></i>
+            <label className="form-label fw-bold small">
+              <i className="bi bi-person-badge text-primary me-1 me-md-2"></i>
               Select Category:
             </label>
             <select 
-              className="form-select form-select-lg"
+              className="form-select form-select-sm form-select-md-lg"
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
-              style={{ borderRadius: '10px' }}
+              style={{ borderRadius: '8px' }}
             >
               {categories.map(category => (
                 <option key={category} value={category}>{category}</option>
@@ -436,15 +518,15 @@ function CollegeRankings() {
             </select>
           </div>
           <div className="col-md-6">
-            <label className="form-label fw-bold">
-              <i className="bi bi-geo-alt text-danger me-2"></i>
+            <label className="form-label fw-bold small">
+              <i className="bi bi-geo-alt text-danger me-1 me-md-2"></i>
               Filter by Location:
             </label>
             <select 
-              className="form-select form-select-lg"
+              className="form-select form-select-sm form-select-md-lg"
               value={selectedLocation}
               onChange={(e) => setSelectedLocation(e.target.value)}
-              style={{ borderRadius: '10px' }}
+              style={{ borderRadius: '8px' }}
             >
               {locations.map(location => (
                 <option key={location} value={location}>{location}</option>
