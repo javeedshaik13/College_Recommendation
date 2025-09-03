@@ -1,52 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import ApiService from '../services/api';
 
-const branchList = [
+// This will be loaded from the backend
+let branchList = [
   { code: "CSE", name: "Computer Science and Engineering" },
-  { code: "CSM", name: "Computer Science and Engineering (AI & ML / Mathematics specialization)" },
   { code: "ECE", name: "Electronics and Communication Engineering" },
   { code: "EEE", name: "Electrical and Electronics Engineering" },
   { code: "MEC", name: "Mechanical Engineering" },
   { code: "CIV", name: "Civil Engineering" },
-  { code: "CSD", name: "Computer Science and Design" },
-  { code: "CSO", name: "Computer Science and Engineering (Cyber Security / Systems)" },
-  { code: "INF", name: "Information Technology" },
-  { code: "MIN", name: "Mining Engineering" },
-  { code: "PHM", name: "Pharmacy" },
-  { code: "PHD", name: "Pharmacy Doctoral / Pharmaceutical Technology" },
-  { code: "CSC", name: "Computer Science and Engineering (Cloud Computing / Core CS)" },
-  { code: "AID", name: "Artificial Intelligence and Data Science" },
-  { code: "CSW", name: "Computer Science and Engineering (Software Engineering)" },
-  { code: "CSN", name: "Computer Science and Networking" },
-  { code: "BME", name: "Biomedical Engineering" },
-  { code: "CHE", name: "Chemical Engineering" },
-  { code: "CSB", name: "Computer Science and Business Systems" },
-  { code: "PHE", name: "Public Health / Pharmaceutical Engineering" },
-  { code: "AGR", name: "Agricultural Engineering" },
-  { code: "AIM", name: "Artificial Intelligence and Machine Learning" },
-  { code: "BIO", name: "Biotechnology" },
-  { code: "CIC", name: "Computer and Information Science / Cybersecurity and Communication" },
-  { code: "DRG", name: "Drug Technology / Pharmaceutical Drug Design" },
-  { code: "FDT", name: "Fashion Design and Technology" },
-  { code: "CSG", name: "Computer Science and Game Development / Graphics" },
-  { code: "CSI", name: "Computer Science and Information Technology" },
-  { code: "EIE", name: "Electronics and Instrumentation Engineering" },
-  { code: "AI", name: "Artificial Intelligence" },
-  { code: "CST", name: "Computer Science and Technology" },
-  { code: "ETM", name: "Electronics and Telematics Engineering" },
-  { code: "ANE", name: "Anaesthesiology / Applied Nuclear Engineering" },
-  { code: "ECM", name: "Electronics and Computer Engineering" },
-  { code: "DTD", name: "Design Technology and Digital Manufacturing" },
-  { code: "FSP", name: "Food Science and Processing" },
-  { code: "PLG", name: "Plastics / Polymer Engineering" },
-  { code: "MET", name: "Metallurgical Engineering" },
-  { code: "MMS", name: "Manufacturing Management and Sciences / Materials Science" },
-  { code: "MTE", name: "Mechatronics Engineering" },
-  { code: "TEX", name: "Textile Engineering" },
-  { code: "ECI", name: "Electronics and Computer Science / Control Instrumentation" },
-  { code: "MCT", name: "Mechanical and Computer Technology" },
-  { code: "MMT", name: "Metallurgy and Materials Technology" },
-  { code: "AUT", name: "Automobile Engineering" },
-  { code: "CME", name: "Construction Management Engineering" }
+  { code: "INF", name: "Information Technology" }
 ];
 
 const categories = [
@@ -57,10 +19,8 @@ const categories = [
   "EWS GEN OU", "EWS GIRLS OU"
 ];
 
-const locations = [
-  "BANDLAGUDA", "GHATKESAR", "HAYATHNAGAR", "KOTHAGUDEM", "KODAD",
-  "BOWRAMPET", "PATANCHERU", "CHILKUR", "UPPAL", "WARANGAL", "HYDERABAD"
-];
+// This will be loaded from the backend
+let locations = ["HYDERABAD", "WARANGAL"];
 
 const coed = ["COED", "GIRLS"];
 
@@ -128,6 +88,77 @@ function CollegePredictor() {
   const [results, setResults] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [showBranchDropdown, setShowBranchDropdown] = useState(false);
+  const [apiError, setApiError] = useState('');
+  const [backendStatus, setBackendStatus] = useState('checking');
+  const [availableBranches, setAvailableBranches] = useState([]);
+  const [availableLocations, setAvailableLocations] = useState([]);
+
+  // Load data from backend on component mount
+  useEffect(() => {
+    loadBackendData();
+  }, []);
+
+  const loadBackendData = async () => {
+    try {
+      setBackendStatus('checking');
+      
+      // Check if backend is running
+      await ApiService.healthCheck();
+      setBackendStatus('connected');
+      
+      // Load branches and locations from backend
+      const [branchesData, locationsData] = await Promise.all([
+        ApiService.getBranches(),
+        ApiService.getLocations()
+      ]);
+      
+      if (branchesData.branches) {
+        const formattedBranches = branchesData.branches.map(branch => ({
+          code: branch,
+          name: getBranchFullName(branch)
+        }));
+        setAvailableBranches(formattedBranches);
+        branchList = formattedBranches;
+      }
+      
+      if (locationsData.locations) {
+        setAvailableLocations(locationsData.locations);
+        locations = locationsData.locations;
+      }
+      
+      setApiError('');
+    } catch (error) {
+      console.error('Failed to load backend data:', error);
+      setBackendStatus('error');
+      setApiError('Backend connection failed. Using sample data.');
+      
+      // Use default data if backend is not available
+      setAvailableBranches(branchList);
+      setAvailableLocations(locations);
+    }
+  };
+
+  const getBranchFullName = (code) => {
+    const branchNames = {
+      'CSE': 'Computer Science and Engineering',
+      'ECE': 'Electronics and Communication Engineering',
+      'EEE': 'Electrical and Electronics Engineering',
+      'MEC': 'Mechanical Engineering',
+      'CIV': 'Civil Engineering',
+      'INF': 'Information Technology',
+      'AID': 'Artificial Intelligence and Data Science',
+      'CSM': 'Computer Science and Engineering (AI & ML)',
+      'CSD': 'Computer Science and Design',
+      'CSO': 'Computer Science and Engineering (Cyber Security)',
+      'MIN': 'Mining Engineering',
+      'PHM': 'Pharmacy',
+      'CHE': 'Chemical Engineering',
+      'BME': 'Biomedical Engineering',
+      'BIO': 'Biotechnology',
+      'AUT': 'Automobile Engineering'
+    };
+    return branchNames[code] || code;
+  };
 
   const handleInputChange = (field, value) => {
     setFormData(prev => ({
@@ -145,70 +176,75 @@ function CollegePredictor() {
     }));
   };
 
-  const predictColleges = () => {
+  const predictColleges = async () => {
     if (!formData.rank || formData.branches.length === 0 || !formData.category) {
       alert('Please fill in your rank, select at least one branch, and choose your category');
       return;
     }
 
     setIsLoading(true);
+    setApiError('');
 
-    // Simulate prediction logic
-    setTimeout(() => {
-      const userRank = parseInt(formData.rank);
-      const predictions = [];
+    try {
+      const predictionData = {
+        rank: parseInt(formData.rank),
+        branches: formData.branches,
+        category: formData.category,
+        location: formData.location || '',
+        collegeType: formData.collegeType || ''
+      };
 
-      sampleColleges.forEach(college => {
-        // Check location filter
-        if (formData.location && college.location !== formData.location) {
-          return;
-        }
-
-        // Check college type filter
-        if (formData.collegeType && college.type !== formData.collegeType) {
-          return;
-        }
-
-        // Check if college has any of the selected branches
-        const commonBranches = college.branches.filter(branch => 
-          formData.branches.includes(branch)
-        );
-
-        if (commonBranches.length === 0) {
-          return;
-        }
-
-        // Check cutoff for the category
-        const cutoff = college.cutoffs[formData.category];
-        if (cutoff && userRank <= cutoff + 500) { // Adding some buffer
-          const probability = Math.max(10, Math.min(95, 100 - ((userRank - cutoff) / cutoff) * 100));
-          
-          commonBranches.forEach(branch => {
-            const branchInfo = branchList.find(b => b.code === branch);
-            predictions.push({
-              college: college.name,
-              logo: college.logo,
-              branch: `${branch} - ${branchInfo?.name || branch}`,
-              probability: `${Math.round(probability)}%`,
-              cutoff: cutoff || "N/A",
-              location: college.location
-            });
-          });
-        }
-      });
-
-      // Sort by probability
-      predictions.sort((a, b) => 
-        parseInt(b.probability) - parseInt(a.probability)
-      );
-
-      setResults(predictions.slice(0, 10)); // Show top 10 results
+      const response = await ApiService.predictColleges(predictionData);
+      
+      if (response.predictions && response.predictions.length > 0) {
+        const formattedResults = response.predictions.map(prediction => ({
+          college: prediction.college_name,
+          logo: getCollegeLogo(prediction.college_name),
+          branch: `${prediction.branch} - ${prediction.branch_name || prediction.branch}`,
+          probability: `${prediction.probability}%`,
+          cutoff: prediction.cutoff_rank || "N/A",
+          location: prediction.location,
+          district: prediction.district,
+          tuition_fee: prediction.tuition_fee,
+          college_type: prediction.college_type,
+          total_score: prediction.total_score
+        }));
+        
+        setResults(formattedResults);
+      } else {
+        setResults([]);
+        setApiError(response.message || 'No colleges found matching your criteria.');
+      }
+    } catch (error) {
+      console.error('Prediction failed:', error);
+      setApiError(`Prediction failed: ${error.message}`);
+      setResults([]);
+    } finally {
       setIsLoading(false);
-    }, 2000);
+    }
+  };
+
+  const getCollegeLogo = (collegeName) => {
+    const logoMap = {
+      'IIIT Hyderabad': 'https://cdn.siasat.com/wp-content/uploads/2020/05/IIIT-Hyderabad.jpg',
+      'JNTUH College of Engineering': 'https://pbs.twimg.com/profile_images/1559799667856388096/oNNEFVfk_400x400.jpg',
+      'CBIT': 'https://upload.wikimedia.org/wikipedia/en/6/68/Chaitanya_Bharathi_Institute_of_Technology_logo.png',
+      'VNR VJIET': 'https://images.shiksha.com/mediadata/images/1747210261phpWUDWnz.jpeg',
+      'Vasavi College of Engineering': 'https://bajraionline.com/wp-content/uploads/2022/08/Vasavi-College-of-Engineering-logo.gif',
+      'CVR College of Engineering': 'https://upload.wikimedia.org/wikipedia/en/4/4c/Cvrh.ibp.jpg'
+    };
+    
+    for (const [key, logo] of Object.entries(logoMap)) {
+      if (collegeName.toLowerCase().includes(key.toLowerCase())) {
+        return logo;
+      }
+    }
+    
+    return 'https://via.placeholder.com/50x50/007bff/ffffff?text=College';
   };
 
   const getBranchName = (code) => {
-    const branch = branchList.find(b => b.code === code);
+    const branch = availableBranches.find(b => b.code === code);
     return branch ? `${code} - ${branch.name}` : code;
   };
   return (
@@ -393,7 +429,7 @@ function CollegePredictor() {
                       }}
                     >
                       <div className="row g-2">
-                        {branchList.map(branch => (
+                        {availableBranches.map(branch => (
                           <div key={branch.code} className="col-md-6">
                             <div className="form-check">
                               <input
@@ -455,7 +491,7 @@ function CollegePredictor() {
                   }}
                 >
                   <option value="">Any Location</option>
-                  {locations.map(location => (
+                  {availableLocations.map(location => (
                     <option key={location} value={location}>{location}</option>
                   ))}
                 </select>
@@ -526,6 +562,36 @@ function CollegePredictor() {
               </div>
             </div>
           </div>
+
+          {/* Backend Status */}
+          {backendStatus === 'checking' && (
+            <div className="alert alert-info mt-4">
+              <i className="bi bi-cloud-arrow-down me-2"></i>
+              Connecting to prediction service...
+            </div>
+          )}
+          
+          {backendStatus === 'error' && (
+            <div className="alert alert-warning mt-4">
+              <i className="bi bi-exclamation-triangle me-2"></i>
+              {apiError || 'Backend service unavailable. Using sample data.'}
+            </div>
+          )}
+          
+          {backendStatus === 'connected' && (
+            <div className="alert alert-success mt-4">
+              <i className="bi bi-check-circle me-2"></i>
+              Connected to live prediction service ✨
+            </div>
+          )}
+
+          {/* API Error Display */}
+          {apiError && (
+            <div className="alert alert-danger mt-4">
+              <i className="bi bi-exclamation-circle me-2"></i>
+              {apiError}
+            </div>
+          )}
 
           {/* Results Section */}
           <div

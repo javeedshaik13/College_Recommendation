@@ -10,6 +10,7 @@ import UserReviews from './components/UserReviews.jsx';
 import Internships from './components/Internships.jsx';
 import Location from './components/Location.jsx';
 import Layout from './layout/Layout.jsx';
+import BranchesExplorer from './components/BranchesExplorer.jsx';
 
 function App() {
 
@@ -27,6 +28,7 @@ function App() {
           <Route path="reviews" element={<UserReviews />} />
           <Route path="internships" element={<Internships />} />
           <Route path="location-search" element={<Location />} />
+          <Route path="branches" element={<BranchesExplorer />} />
         </Route>
       </Routes>
     </BrowserRouter>  

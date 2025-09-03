@@ -10,7 +10,6 @@ import {
 } from "chart.js";
 import { Bar, Pie, Line } from "react-chartjs-2";
 
-// Register chart.js components
 ChartJS.register(
   CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend,
   ArcElement, PointElement, LineElement
@@ -28,12 +27,13 @@ export default function CollegeStats() {
   const chartTypes = ["Bar", "Pie", "Line", "Histogram"];
 
   const [data, setData] = useState([]);
-  const [selectedCollege, setSelectedCollege] = useState("All");
-  const [selectedBranch, setSelectedBranch] = useState("All");
-  const [selectedLocation, setSelectedLocation] = useState("All");
-  const [selectedCategory, setSelectedCategory] = useState("OC BOYS");
+  const [selectedCollege, setSelectedCollege] = useState("");
+  const [selectedBranch, setSelectedBranch] = useState("");
+  const [selectedLocation, setSelectedLocation] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("");
   const [chartType, setChartType] = useState("Bar");
 
+  // Load CSV data
   useEffect(() => {
     const files = [
       "/Cleaned-DS/df1_cleaned.csv",
@@ -44,7 +44,6 @@ export default function CollegeStats() {
       "/Cleaned-DS/df6_cleaned.csv",
     ];
 
-
     Promise.all(
       files.map(file =>
         fetch(file)
@@ -52,17 +51,11 @@ export default function CollegeStats() {
             if (!res.ok) throw new Error(`Failed to load ${file}`);
             return res.text();
           })
-          .then(csvText => {
-            const parsed = Papa.parse(csvText, { header: true, skipEmptyLines: true }).data;
-            console.log(`Loaded data from ${file}:`, parsed.slice(0, 3)); // show first 3 rows as sample
-            return parsed;
-          })
+          .then(csvText => Papa.parse(csvText, { header: true, skipEmptyLines: true }).data)
       )
-    ).then(allData => {
-      const merged = allData.flat().filter(row => Object.values(row).some(v => v !== ""));
-      console.log("Merged data sample:", merged.slice(0, 5));
-      setData(merged);
-    }).catch(err => console.error("Error loading CSV files:", err));
+    )
+    .then(allData => setData(allData.flat().filter(row => Object.values(row).some(v => v !== ""))))
+    .catch(err => console.error("Error loading CSV files:", err));
   }, []);
 
   const colleges = ["All", ...new Set(data.map(d => d["INSTITUTE NAME"]).filter(Boolean))];
@@ -70,14 +63,24 @@ export default function CollegeStats() {
   const locations = ["All", ...new Set(data.map(d => d["PLACE"]).filter(Boolean))];
 
   const filteredData = data.filter(item =>
-    (selectedCollege === "All" || item["INSTITUTE NAME"] === selectedCollege) &&
-    (selectedBranch === "All" || item["BRANCH NAME"] === selectedBranch) &&
-    (selectedLocation === "All" || item["PLACE"] === selectedLocation)
+    (selectedCollege === "" || selectedCollege === "All" || item["INSTITUTE NAME"] === selectedCollege) &&
+    (selectedBranch === "" || selectedBranch === "All" || item["BRANCH NAME"] === selectedBranch) &&
+    (selectedLocation === "" || selectedLocation === "All" || item["PLACE"] === selectedLocation) &&
+    selectedCategory
   );
 
-  // console.log("Filtered data sample:", filteredData.slice(0, 5));
+  const shortBranchName = branch => {
+    const map = {
+      "Computer Science and Engineering": "CSE",
+      "Computer Science & Data": "CSD",
+      "AI & Data": "AID",
+      "Electronics and Communication Engineering": "ECE",
+      "Electrical and Electronics Engineering": "EEE",
+    };
+    return map[branch] || branch.slice(0, 3).toUpperCase();
+  };
 
-  const chartLabels = filteredData.map(item => item["BRANCH NAME"]);
+  const chartLabels = filteredData.map(item => shortBranchName(item["BRANCH NAME"]));
   const chartValues = filteredData.map(item => {
     const val = parseFloat(item[selectedCategory]);
     return isNaN(val) ? 0 : val;
@@ -87,62 +90,100 @@ export default function CollegeStats() {
     labels: chartLabels,
     datasets: [
       {
-        label: `Cutoff for ${selectedCategory}`,
+        label: selectedCategory ? `Cutoff for ${selectedCategory}` : "",
         data: chartValues,
-        backgroundColor: chartLabels.map(
-          () => `hsl(${Math.floor(Math.random() * 360)}, 70%, 60%)`
-        ),
+        backgroundColor: chartLabels.map(() => `hsl(${Math.floor(Math.random() * 360)}, 70%, 60%)`),
         borderColor: "rgba(0, 0, 0, 0.5)",
         borderWidth: 1,
       }
     ]
   };
 
-  const renderChart = () => {
-    const options = { responsive: true, plugins: { legend: { position: "top" } } };
+  const chartOptions = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: "top",
+        labels: { boxWidth: 20, padding: 10, font: { size: 14 } },
+      },
+      tooltip: {
+        callbacks: {
+          label: context => `${context.label}: ${context.parsed.y ?? context.parsed}`,
+        },
+      },
+    },
+    scales: chartType === "Histogram" ? { x: { stacked: true }, y: { stacked: true } } : {},
+  };
 
+  const renderChart = () => {
+    if (!selectedCategory || filteredData.length === 0) return null;
     switch (chartType) {
-      case "Pie":
-        return <Pie data={chartData} options={options} />;
-      case "Line":
-        return <Line data={chartData} options={options} />;
-      case "Histogram":
-        return <Bar data={chartData} options={{
-          ...options,
-          scales: { x: { stacked: true }, y: { stacked: true } }
-        }} />;
-      default:
-        return <Bar data={chartData} options={options} />;
+      case "Pie": return <Pie data={chartData} options={chartOptions} />;
+      case "Line": return <Line data={chartData} options={chartOptions} />;
+      case "Histogram": return <Bar data={chartData} options={chartOptions} />;
+      default: return <Bar data={chartData} options={chartOptions} />;
     }
+  };
+
+  const dropdownButtonStyle = {
+    padding: "10px 15px",
+    fontSize: "14px",
+    borderRadius: "6px",
+    border: "1px solid #0d6efd",
+    backgroundColor: "#0d6efd",
+    color: "white",
+    cursor: "pointer",
+    minWidth: "180px",
+    textAlign: "center"
+  };
+
+  const filtersRowStyle = {
+    display: "flex",
+    flexWrap: "wrap",
+    gap: "15px",
+    justifyContent: "center",
+    marginBottom: "30px"
   };
 
   return (
     <>
-      <div className="container">
-        <h2>📊 College Statistics Dashboard</h2>
+      <Navbar />
+      <div className="container" style={{ marginTop: "50px", padding: "20px" }}>
+        <h2 style={{ textAlign: "center", marginBottom: "25px" }}>📊 College Statistics Dashboard</h2>
 
-        <div style={{ display: "flex", gap: "10px", flexWrap: "wrap", marginBottom: "20px", marginTop: "100px" }}>
-          <select value={selectedCollege} onChange={e => setSelectedCollege(e.target.value)}>
-            {colleges.map(c => <option key={c}>{c}</option>)}
-          </select>
+        {/* Filters row */}
+        <div style={filtersRowStyle}>
+          <div>
+            <label style={{ display: "block", marginBottom: "5px", fontWeight: "bold" }}>Select College</label>
+            <select style={dropdownButtonStyle} value={selectedCollege} onChange={e => setSelectedCollege(e.target.value)}>
+              {colleges.map(c => <option key={c}>{c}</option>)}
+            </select>
+          </div>
 
-          <select value={selectedBranch} onChange={e => setSelectedBranch(e.target.value)}>
-            {branches.map(b => <option key={b}>{b}</option>)}
-          </select>
+          <div>
+            <label style={{ display: "block", marginBottom: "5px", fontWeight: "bold" }}>Select Branch</label>
+            <select style={dropdownButtonStyle} value={selectedBranch} onChange={e => setSelectedBranch(e.target.value)}>
+              {branches.map(b => <option key={b}>{b}</option>)}
+            </select>
+          </div>
 
-          <select value={selectedLocation} onChange={e => setSelectedLocation(e.target.value)}>
-            {locations.map(l => <option key={l}>{l}</option>)}
-          </select>
+          <div>
+            <label style={{ display: "block", marginBottom: "5px", fontWeight: "bold" }}>Select Category</label>
+            <select style={dropdownButtonStyle} value={selectedCategory} onChange={e => setSelectedCategory(e.target.value)}>
+              <option value="">Choose Category</option>
+              {categories.map(cat => <option key={cat}>{cat}</option>)}
+            </select>
+          </div>
 
-          <select value={selectedCategory} onChange={e => setSelectedCategory(e.target.value)}>
-            {categories.map(cat => <option key={cat}>{cat}</option>)}
-          </select>
-
-          <select value={chartType} onChange={e => setChartType(e.target.value)}>
-            {chartTypes.map(type => <option key={type}>{type}</option>)}
-          </select>
+          <div>
+            <label style={{ display: "block", marginBottom: "5px", fontWeight: "bold" }}>Select Plot Type</label>
+            <select style={dropdownButtonStyle} value={chartType} onChange={e => setChartType(e.target.value)}>
+              {chartTypes.map(type => <option key={type}>{type}</option>)}
+            </select>
+          </div>
         </div>
 
+        {/* Chart */}
         <div style={{ maxWidth: "100%", overflowX: "auto" }}>
           {renderChart()}
         </div>
