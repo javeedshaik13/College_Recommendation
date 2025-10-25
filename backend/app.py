@@ -101,6 +101,88 @@ def get_colleges():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+
+@app.route('/api/colleges-with-coords', methods=['GET'])
+def get_colleges_with_coords():
+    """Get all colleges with coordinates if available (reads college_coords.csv)"""
+    try:
+        df = load_data()
+        if df.empty:
+            return jsonify({"error": "No data available"}), 500
+
+        # build base colleges list
+        colleges = []
+        if 'INSTITUTE NAME' in df.columns:
+            unique_colleges = df['INSTITUTE NAME'].dropna().unique()
+
+            def sanitize_value(v, default=None):
+                # replace numpy/pandas NaN with None and strip strings
+                try:
+                    if pd.isna(v):
+                        return default
+                except Exception:
+                    pass
+                if isinstance(v, str):
+                    s = v.strip()
+                    return s if s != '' else default
+                return v if v is not None else default
+
+            for college_name in unique_colleges:
+                college_data = df[df['INSTITUTE NAME'] == college_name].iloc[0]
+                colleges.append({
+                    "name": str(college_name),
+                    "location": sanitize_value(college_data.get('PLACE'), 'Unknown'),
+                    "district": sanitize_value(college_data.get('DIST'), 'Unknown'),
+                    "type": sanitize_value(college_data.get('COLLEGE TYPE'), 'Unknown'),
+                    "lat": None,
+                    "lng": None
+                })
+
+        # try to read coords file
+        coords_path = os.path.join(DATASET_DIR, 'college_coords.csv')
+        if os.path.exists(coords_path):
+            try:
+                df_coords = pd.read_csv(coords_path)
+                # Normalize matching key
+                df_coords['INSTITUTE NAME'] = df_coords['INSTITUTE NAME'].astype(str)
+
+                # helper to safely convert to float or None (NaN is not valid JSON)
+                def safe_float(val):
+                    try:
+                        f = float(val)
+                        if np.isfinite(f):
+                            return f
+                    except Exception:
+                        pass
+                    return None
+
+                coords_map = {}
+                for _, row in df_coords.iterrows():
+                    name = str(row.get('INSTITUTE NAME'))
+                    lat = safe_float(row.get('lat') if 'lat' in row else row.get('LAT'))
+                    lng = safe_float(row.get('lng') if 'lng' in row else row.get('LNG'))
+                    coords_map[name] = (lat, lng)
+
+                # attach coords (only if valid numbers exist; otherwise leave as None)
+                for c in colleges:
+                    key = str(c['name'])
+                    if key in coords_map:
+                        lat, lng = coords_map[key]
+                        if lat is not None and lng is not None:
+                            c['lat'], c['lng'] = lat, lng
+                        else:
+                            # ensure explicit None instead of NaN
+                            c['lat'], c['lng'] = None, None
+            except Exception as e:
+                print(f"❌ Error reading coords file: {e}")
+
+        return jsonify({
+            "colleges": colleges,
+            "total_count": len(colleges)
+        })
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 @app.route('/api/branches', methods=['GET'])
 def get_branches():
     """Get all available branches"""

@@ -8,7 +8,7 @@ class Config:
     DEBUG = os.environ.get('FLASK_DEBUG', 'True').lower() == 'true'
     
     # CORS settings
-    CORS_ORIGINS = ['http://localhost:3000', 'http://localhost:5173', 'http://127.0.0.1:3000', 'http://127.0.0.1:5173']
+    CORS_ORIGINS = ['http://localhost:3000', 'http://localhost:5173']
     
     # Dataset settings
     PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
