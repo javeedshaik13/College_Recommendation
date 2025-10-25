@@ -37,6 +37,11 @@ class ApiService {
     return this.request('/colleges');
   }
 
+  // Get colleges with coordinates (used by map/location component)
+  async getCollegesWithCoords() {
+    return this.request('/colleges-with-coords');
+  }
+
   // Get all branches
   async getBranches() {
     return this.request('/branches');
