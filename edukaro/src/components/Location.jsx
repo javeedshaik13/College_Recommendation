@@ -8,12 +8,11 @@ export default function Location() {
   const [error, setError] = useState(null)
 
   useEffect(() => {
-  // Vite exposes variables via import.meta.env.VITE_*
-  // Use GOOGLE_MAPS_API_KEY in the frontend .env; do NOT fall back to a hardcoded key.
-  const apiKey = import.meta.env.GOOGLE_MAPS_API_KEY || import.meta.env.GOOGLE_MAPS_API_KEY
+  // Vite only exposes env vars prefixed with VITE_ to client code.
+  const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY
 
     if (!apiKey) {
-      setError('Google Maps API key not provided. Set GOOGLE_MAPS_API_KEY in .env.local')
+      setError('Google Maps API key not provided. Set VITE_GOOGLE_MAPS_API_KEY in .env.local')
       setLoading(false)
       return
     }
