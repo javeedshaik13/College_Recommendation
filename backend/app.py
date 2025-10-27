@@ -143,7 +143,6 @@ def get_colleges_with_coords():
         if os.path.exists(coords_path):
             try:
                 df_coords = pd.read_csv(coords_path)
-                # Normalize matching key
                 df_coords['INSTITUTE NAME'] = df_coords['INSTITUTE NAME'].astype(str)
 
                 # helper to safely convert to float or None (NaN is not valid JSON)
